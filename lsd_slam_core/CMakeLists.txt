@@ -1,6 +1,18 @@
-cmake_minimum_required(VERSION 2.8.7)
+# Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
+# Catkin CMake Standard: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/standards.html
+cmake_minimum_required(VERSION 2.8.3)
 project(lsd_slam_core)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+# Load catkin and all dependencies required for this package
+# TODO: remove all from COMPONENTS that are not catkin packages.
+find_package(catkin REQUIRED COMPONENTS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer roscpp)
+
+# include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+# CATKIN_MIGRATION: removed during catkin migration
+# cmake_minimum_required(VERSION 2.8.7)
+project(lsd_slam_core)
+
+# CATKIN_MIGRATION: removed during catkin migration
+# include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -10,7 +22,9 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 set(ROS_BUILD_TYPE Release)
 
-rosbuild_init() 
+
+# CATKIN_MIGRATION: removed during catkin migration
+# rosbuild_init() 
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
@@ -22,6 +36,7 @@ find_package(OpenCV 2.4.8 EXACT REQUIRED
 
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
+find_package(libg2o REQUIRED)
 
 # FabMap
 # uncomment this part to enable fabmap
@@ -31,12 +46,15 @@ find_package(SuiteParse REQUIRED) # Apparently needed by g2o
 #set(FABMAP_LIB openFABMAP )
 
 # Dynamic Reconfigure Services
-rosbuild_find_ros_package(dynamic_reconfigure)
-include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
-gencfg()
+#rosbuild_find_ros_package(dynamic_reconfigure)
+#include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
+#gencfg()
 
 # SSE flags
-rosbuild_check_for_sse()
+
+# CATKIN_MIGRATION
+# Find other way to find SSE
+# rosbuild_check_for_sse()
 add_definitions("-DUSE_ROS")
 add_definitions("-DENABLE_SSE")
 
@@ -86,17 +104,35 @@ include_directories(
 
 
 # build shared library.
-rosbuild_add_library(lsdslam SHARED ${SOURCE_FILES})
-target_link_libraries(lsdslam ${FABMAP_LIB} g2o_core g2o_stuff csparse cxsparse g2o_solver_csparse g2o_csparse_extension g2o_types_sim3 g2o_types_sba)
-rosbuild_link_boost(lsdslam thread)
-
+add_library(lsdslam SHARED ${SOURCE_FILES})
+#target_link_libraries(lsdslam ${FABMAP_LIB} g2o_core g2o_stuff csparse cxsparse g2o_solver_csparse g2o_csparse_extension g2o_types_sim3 g2o_types_sba)
+target_link_libraries(lsdslam ${FABMAP_LIB} ${libg2o_LIBRARIES} csparse cxsparse ${OpenCV_LIBS} ${catkin_LIBRARIES})
+find_package(Boost REQUIRED COMPONENTS thread system)
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(lsdslam ${Boost_LIBRARIES})
 
 # build live ros node
-rosbuild_add_executable(live_slam src/main_live_odometry.cpp)
+add_executable(live_slam src/main_live_odometry.cpp)
 target_link_libraries(live_slam lsdslam)
 
 
 # build image node
-rosbuild_add_executable(dataset src/main_on_images.cpp)
+add_executable(dataset src/main_on_images.cpp)
 target_link_libraries(dataset lsdslam)
 
+## Generate added messages and services with any dependencies listed here
+#generate_messages(
+#    #TODO DEPENDENCIES geometry_msgs std_msgs
+#)
+
+# catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
+# TODO: fill in what other packages will need to use this package
+generate_dynamic_reconfigure_options(cfg/LSDParams.cfg cfg/LSDDebugParams.cfg)
+add_dependencies(live_slam ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(dataset ${${PROJECT_NAME}_EXPORTED_TARGETS})
+catkin_package(
+    DEPENDS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer
+    CATKIN_DEPENDS # TODO
+    INCLUDE_DIRS # TODO include
+    LIBRARIES # TODO
+)

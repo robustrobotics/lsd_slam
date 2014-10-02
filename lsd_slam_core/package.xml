@@ -1,0 +1,41 @@
+<package>
+  <name>lsd_slam_core</name>
+  <version>1.0.0</version>
+  <description>Large-Scale Direct Monocular SLAM</description>
+  <maintainer email="engelj@in.tum.de">Jakob Engel</maintainer>
+
+  <license>see http://vision.in.tum.de/lsdslam </license>
+
+  <url type="website">http://vision.in.tum.de/lsdslam</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Jakob Engel</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>roslib</build_depend>
+  <build_depend>rosbag</build_depend>
+  <build_depend>lsd_slam_viewer</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>cv_bridge</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>roslib</run_depend>
+  <run_depend>rosbag</run_depend>
+  <run_depend>lsd_slam_viewer</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>cv_bridge</test_depend> -->
+  <!-- <test_depend>dynamic_reconfigure</test_depend> -->
+  <!-- <test_depend>sensor_msgs</test_depend> -->
+  <!-- <test_depend>roslib</test_depend> -->
+  <!-- <test_depend>rosbag</test_depend> -->
+  <!-- <test_depend>lsd_slam_viewer</test_depend> -->
+
+</package>

@@ -1,6 +1,18 @@
-cmake_minimum_required(VERSION 2.4.6)
+# Catkin User Guide: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/user_guide.html
+# Catkin CMake Standard: http://www.ros.org/doc/groovy/api/catkin/html/user_guide/standards.html
+cmake_minimum_required(VERSION 2.8.3)
 project(lsd_slam_viewer)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+# Load catkin and all dependencies required for this package
+# TODO: remove all from COMPONENTS that are not catkin packages.
+find_package(catkin REQUIRED COMPONENTS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag message_generation roscpp)
+
+# include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+# CATKIN_MIGRATION: removed during catkin migration
+# cmake_minimum_required(VERSION 2.4.6)
+project(lsd_slam_viewer)
+
+# CATKIN_MIGRATION: removed during catkin migration
+# include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -10,7 +22,9 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 set(ROS_BUILD_TYPE Release)
 
-rosbuild_init()
+
+# CATKIN_MIGRATION: removed during catkin migration
+# rosbuild_init()
 
 ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/thirdparty/Sophus)
 
@@ -29,20 +43,27 @@ find_package(QGLViewer REQUIRED)
 find_package(Eigen3 REQUIRED)
 include_directories(${QT_INCLUDES} ${EIGEN3_INCLUDE_DIR} ${QGLVIEWER_INCLUDE_DIR}) #${OpenCV_INCLUDE_DIRS})
 
-rosbuild_find_ros_package(dynamic_reconfigure)
-include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
-gencfg()
+#rosbuild_find_ros_package(dynamic_reconfigure)
+#include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
+#gencfg()
 
 
 
 
 
 # Messages & Services
-rosbuild_genmsg()
+add_message_files(
+  FILES
+  keyframeGraphMsg.msg
+  keyframeMsg.msg
+)
 
 
 # SSE flags
-rosbuild_check_for_sse()
+
+# CATKIN_MIGRATION
+# Find other way to find SSE
+# rosbuild_check_for_sse()
 set(CMAKE_CXX_FLAGS
    "${SSE_FLAGS}"
 )
@@ -66,12 +87,29 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
 )  
 
-rosbuild_add_executable(viewer src/main_viewer.cpp ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(viewer src/main_viewer.cpp ${SOURCE_FILES} ${HEADER_FILES})
+target_link_libraries(viewer ${QGLViewer_LIBRARIES} ${QT_LIBRARIES} ${QGLVIEWER_LIBRARY} GL glut GLU ${catkin_LIBRARIES})
 
-target_link_libraries(viewer ${QGLViewer_LIBRARIES} ${QT_LIBRARIES} ${QGLVIEWER_LIBRARY} GL glut GLU)
+find_package(Boost REQUIRED COMPONENTS thread system)
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(viewer ${Boost_LIBRARIES})
 
-rosbuild_link_boost(viewer thread)
 
+add_executable(videoStitch src/main_stitchVideos.cpp)
+target_link_libraries(videoStitch ${OpenCV_LIBS})
 
-rosbuild_add_executable(videoStitch src/main_stitchVideos.cpp)
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+    DEPENDENCIES geometry_msgs std_msgs
+)
 
+# catkin_package parameters: http://ros.org/doc/groovy/api/catkin/html/dev_guide/generated_cmake_api.html#catkin-package
+# TODO: fill in what other packages will need to use this package
+generate_dynamic_reconfigure_options(cfg/LSDSLAMViewerParams.cfg)
+add_dependencies(viewer lsd_slam_viewer_generate_messages)
+catkin_package(
+    DEPENDS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag
+    CATKIN_DEPENDS message_runtime
+    INCLUDE_DIRS # TODO include
+    LIBRARIES # TODO
+)

@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="lsd_slam_core" type="live_slam" name="live_slam" >
+    <remap from="image" to="image_raw" />
+    <remap from="camera_info" to="camera_info" />  	
+  </node>
+  <node pkg="lsd_slam_viewer" type="viewer" name="viewer" />
+</launch>

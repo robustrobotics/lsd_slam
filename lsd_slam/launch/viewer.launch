@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="lsd_slam_viewer" type="viewer" name="viewer" />
+</launch>

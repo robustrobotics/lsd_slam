@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="camera_calibration" type="cameracheck.py" name="checker"
+    	  args="--size 9x6 --square 0.024765" output="screen">
+	  
+        <remap from="monocular" to="/camera" />
+	<remap from="image" to="/camera/image_rect" />	  	  
+    </node>	  	  
+</launch>

@@ -24,7 +24,6 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif ()
 
-
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_init() 
 

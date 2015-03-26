@@ -9,6 +9,7 @@
   <node pkg="nodelet" type="nodelet" name="camera1394_nodelet"
         args="load camera1394/driver camera_nodelet_manager">
 	<param name="frame_rate" value="60" />
+	<param name="use_ros_time" value="True" />
 	<param name="camera_info_url" 
 	       value="file://$(find lsd_slam)/2014.10.10_firefly_ros.yml"/>
   </node>

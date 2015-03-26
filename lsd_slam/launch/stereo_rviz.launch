@@ -1,0 +1,11 @@
+<launch>
+  <!-- camera to world transform -->
+  <node pkg="tf" type="static_transform_publisher" name="camera_to_world"
+  	args="0.0 0.0 0.0 0.5 -0.5 0.5 -0.5 world camera 100" >
+  </node>
+
+  
+  <!-- rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lsd_slam)/rviz_stereo.rviz" >
+  </node>
+</launch>

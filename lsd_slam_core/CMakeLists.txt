@@ -37,7 +37,7 @@ find_package(OpenCV 2.4.8 EXACT REQUIRED
 
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
-find_package(libg2o REQUIRED)
+find_package(G2O REQUIRED)
 
 # FabMap
 # uncomment this part to enable fabmap
@@ -101,13 +101,19 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/thirdparty/Sophus
   ${CSPARSE_INCLUDE_DIR} #Has been set by SuiteParse
   ${CHOLMOD_INCLUDE_DIR} #Has been set by SuiteParse
+  ${G2O_INCLUDE_DIR}
 )
 
 
 # build shared library.
 add_library(lsdslam SHARED ${SOURCE_FILES})
 #target_link_libraries(lsdslam ${FABMAP_LIB} g2o_core g2o_stuff csparse cxsparse g2o_solver_csparse g2o_csparse_extension g2o_types_sim3 g2o_types_sba)
-target_link_libraries(lsdslam ${FABMAP_LIB} ${libg2o_LIBRARIES} csparse cxsparse ${OpenCV_LIBS} ${catkin_LIBRARIES})
+target_link_libraries(lsdslam ${FABMAP_LIB} 
+  ${G2O_CORE_LIBRARY}
+  ${G2O_STUFF_LIBRARY}
+  ${G2O_SOLVER_CSPARSE_EXTENSION}
+  ${G2O_TYPES_SBA}
+  csparse cxsparse ${OpenCV_LIBS} ${catkin_LIBRARIES})
 find_package(Boost REQUIRED COMPONENTS thread system)
 include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(lsdslam ${Boost_LIBRARIES})

@@ -1,6 +1,13 @@
 <launch>
-    <node pkg="lsd_slam_viewer" type="viewer" name="viewer"/>
+  
+  <arg name="image" default="/image_rect" />
+  <arg name="camera_info" default="/camera_info" />
+  
+  <include file="$(find mlm_ros)/launch/viewer.launch" />
 
-    <include file="$(find lsd_slam)/launch/live_slam.launch" />
+  <include file="$(find mlm_ros)/launch/live_slam.launch">
+    <arg name="image" value="$(arg image)" />
+    <arg name="camera_info" value="$(arg camera_info)" />
+  </include>
 
 </launch>

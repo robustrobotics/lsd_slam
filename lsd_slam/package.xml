@@ -23,10 +23,7 @@
 
   <!-- Dependencies needed only for running tests. -->
 
-
-
-
-
-
-
+  <export>
+    <metapackage/>
+  </export>
 </package>

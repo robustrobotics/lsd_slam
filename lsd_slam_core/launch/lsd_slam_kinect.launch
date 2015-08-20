@@ -5,6 +5,8 @@
   <arg name="depth" default="/kinect/depth/image" />
   <arg name="depth_camera_info" default="/kinect/depth/camera_info" />
   <arg name="frame_id" default="camera_world" />
+  <arg name="bag_output" default="false" />
+  <arg name="bag_prefix" default="/home/wng/Projects/rrg/data/lsd_slam" />
   
   <!-- camera RDF to FLU transform -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="camera_world_to_world"
@@ -19,4 +21,11 @@
     <remap from="depth" to="$(arg depth)" />
     <remap from="depth_camera_info" to="$(arg depth_camera_info)" />    
   </node>
+
+  <!-- Bag the outputs. (NOT the inputs) -->
+  <node pkg="rosbag" type="record" name="lsd_slam_bag_output"
+        output="screen"
+        args="-e /lsd_slam/.* -o $(arg bag_prefix)">
+  </node>
+  
 </launch>

@@ -4,6 +4,8 @@
   <arg name="camera_info" default="/kinect/rgb/camera_info" />
   <arg name="depth" default="/kinect/depth/image" />
   <arg name="depth_camera_info" default="/kinect/depth/camera_info" />
+  <arg name="bag_output" default="false" />
+  <arg name="bag_prefix" default="/home/wng/Projects/rrg/data/lsd_slam" />
   
   <include file="$(find lsd_slam_viewer)/launch/viewer.launch" />
 
@@ -12,6 +14,8 @@
     <arg name="camera_info" value="$(arg camera_info)" />
     <arg name="depth" value="$(arg depth)" />
     <arg name="depth_camera_info" value="$(arg depth_camera_info)" />
+    <arg name="bag_output" value="$(arg bag_output)" />
+    <arg name="bag_prefix" value="$(arg bag_prefix)" />
   </include>
 
 </launch>

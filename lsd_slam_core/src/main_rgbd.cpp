@@ -66,16 +66,23 @@ void groundTruthCallback(const sensor_msgs::Image::ConstPtr& rgb,
   // Set initial pose to ground truth pose.
   tf2_ros::Buffer buffer;
   tf2_ros::TransformListener listener(buffer);
-  geometry_msgs::TransformStamped tf;
+  geometry_msgs::TransformStamped tf, tf2;
 
   // TODO(wng): What happens if these frame ids change?  Any way to remap them?
   // NOTE: Desired time should be rgb->header.stamp, but ros complains that this
   // is earlier than the earliest available tf. For now just use most recent tf.
-  tf = buffer.lookupTransform("camera_world", "openni_rgb_optical_frame", ros::Time(0),
+  tf = buffer.lookupTransform("world", "openni_rgb_optical_frame", ros::Time(0),
+                              ros::Duration(1.0));
+  tf2 = buffer.lookupTransform("openni_rgb_optical_frame", "openni_rgb_frame", ros::Time(0),
                               ros::Duration(1.0));
 
   Eigen::Affine3d pose_se3;
   tf::transformMsgToEigen(tf.transform, pose_se3);
+
+  Eigen::Affine3d flu_to_optical;
+  tf::transformMsgToEigen(tf2.transform, flu_to_optical);
+
+  pose_se3 = flu_to_optical * pose_se3;
 
   Sophus::Sim3f pose_sim3;
   pose_sim3.quaternion() = pose_se3.rotation().cast<float>();

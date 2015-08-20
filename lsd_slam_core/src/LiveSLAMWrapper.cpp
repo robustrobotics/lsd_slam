@@ -127,7 +127,7 @@ void LiveSLAMWrapper::initializeFromGTDepth(const double time, const cv::Mat& im
   assert(grayImg.elemSize() == 1);
 
   monoOdometry->gtDepthInit(grayImg.data, reinterpret_cast<float*>(idepth.data),
-                     time, 1); //, pose);
+                     time, 1, pose);
   isInitialized = true;
 
   return;

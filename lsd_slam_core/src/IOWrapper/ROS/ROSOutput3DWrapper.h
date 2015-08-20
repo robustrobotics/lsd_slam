@@ -77,6 +77,17 @@ public:
 
 	virtual void publishDebugInfo(Eigen::Matrix<float, 20, 1> data);
 
+  virtual void publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
+                                    float msObserve, float msRegularize, float msPropagate,
+                                    float msFillHoles, float msSetDepth,
+                                    float nAvgUpdate, float nAvgCreate, float nAvgFinalize,
+                                    float nAvgObserve, float nAvgRegularize, float nAvgPropagate,
+                                    float nAvgFillHoles, float nAvgSetDepth);
+
+  virtual void publishSlamSystemStats(float msTrackFrame, float msOptimizationIteration,
+                                      float msFindConstraintsItaration, float msFindReferences,
+                                      float nAvgTrackFrame, float nAvgOptimizationIteration,
+                                      float nAvgFindConstraintsItaration, float nAvgFindReferences);
 
 	int publishLvl;
 	
@@ -98,6 +109,9 @@ private:
 
 	std::string pose_channel;
 	ros::Publisher pose_publisher;
+
+  ros::Publisher slam_system_stats_pub;
+  ros::Publisher depth_map_stats_pub;
 
 	ros::NodeHandle nh_;
 };

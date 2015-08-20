@@ -1,0 +1,17 @@
+<launch>
+  
+  <arg name="image" default="/kinect/rgb/image_rect" />
+  <arg name="camera_info" default="/kinect/rgb/camera_info" />
+  <arg name="depth" default="/kinect/depth/image" />
+  <arg name="depth_camera_info" default="/kinect/depth/camera_info" />
+  
+  <include file="$(find lsd_slam_viewer)/launch/viewer.launch" />
+
+  <include file="$(find lsd_slam_core)/launch/lsd_slam_kinect.launch">
+    <arg name="image" value="$(arg image)" />
+    <arg name="camera_info" value="$(arg camera_info)" />
+    <arg name="depth" value="$(arg depth)" />
+    <arg name="depth_camera_info" value="$(arg depth_camera_info)" />
+  </include>
+
+</launch>

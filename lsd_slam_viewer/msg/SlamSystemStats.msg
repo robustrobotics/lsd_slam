@@ -1,4 +1,6 @@
 # This message contains statistics from lsd_slam::SlamSystem.
+std_msgs/Header header
+
 float32 msTrackFrame
 float32 msOptimizationIteration
 float32 msFindConstraintsItaration

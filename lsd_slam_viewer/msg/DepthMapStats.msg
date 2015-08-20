@@ -1,4 +1,6 @@
 # This message contains statistics from lsd_slam::DepthMap.
+std_msgs/Header header
+
 float32 msUpdate
 float32 msCreate
 float32 msFinalize

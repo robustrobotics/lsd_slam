@@ -227,6 +227,9 @@ publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
                      float nAvgFillHoles, float nAvgSetDepth) {
   lsd_slam_viewer::DepthMapStats::Ptr msg(new lsd_slam_viewer::DepthMapStats());
 
+  msg->header = std_msgs::Header();
+  msg->header.stamp = ros::Time::now();
+
   msg->msUpdate = msUpdate;
   msg->msCreate = msCreate;
   msg->msFinalize = msFinalize;
@@ -252,6 +255,9 @@ publishSlamSystemStats(float msTrackFrame, float msOptimizationIteration,
                        float nAvgTrackFrame, float nAvgOptimizationIteration,
                        float nAvgFindConstraintsItaration, float nAvgFindReferences) {
   lsd_slam_viewer::SlamSystemStats::Ptr msg(new lsd_slam_viewer::SlamSystemStats());
+
+  msg->header = std_msgs::Header();
+  msg->header.stamp = ros::Time::now();
 
   msg->msTrackFrame = msTrackFrame;
   msg->msOptimizationIteration = msOptimizationIteration;

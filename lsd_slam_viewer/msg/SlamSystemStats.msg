@@ -1,0 +1,9 @@
+# This message contains statistics from lsd_slam::SlamSystem.
+float32 msTrackFrame
+float32 msOptimizationIteration
+float32 msFindConstraintsItaration
+float32 msFindReferences
+float32 nAvgTrackFrame
+float32 nAvgOptimizationIteration
+float32 nAvgFindConstraintsItaration
+float32 nAvgFindReferences

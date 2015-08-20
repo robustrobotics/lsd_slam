@@ -4,7 +4,19 @@ cmake_minimum_required(VERSION 2.8.3)
 project(lsd_slam_core)
 # Load catkin and all dependencies required for this package
 # TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer roscpp)
+find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
+  dynamic_reconfigure
+  sensor_msgs
+  roslib
+  rosbag
+  lsd_slam_viewer
+  roscpp
+  tf2_ros
+  eigen_conversions
+  message_filters
+  geometry_msgs
+  cv_bridge)
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
@@ -122,6 +134,9 @@ target_link_libraries(lsdslam ${Boost_LIBRARIES})
 add_executable(live_slam src/main_live_odometry.cpp)
 target_link_libraries(live_slam lsdslam)
 
+# build live ros node
+add_executable(lsd_slam_rgbd src/main_rgbd.cpp)
+target_link_libraries(lsd_slam_rgbd lsdslam)
 
 # build image node
 add_executable(dataset src/main_on_images.cpp)
@@ -138,7 +153,11 @@ generate_dynamic_reconfigure_options(cfg/LSDParams.cfg cfg/LSDDebugParams.cfg)
 add_dependencies(live_slam ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(dataset ${${PROJECT_NAME}_EXPORTED_TARGETS})
 catkin_package(
-    DEPENDS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer
+    DEPENDS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer tf2_ros
+    eigen_conversions
+    message_filters
+    geometry_msgs
+    cv_bridge
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO

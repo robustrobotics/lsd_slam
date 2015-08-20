@@ -21,7 +21,12 @@
   <build_depend>roslib</build_depend>
   <build_depend>rosbag</build_depend>
   <build_depend>lsd_slam_viewer</build_depend>
-
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>eigen_conversions</build_depend>
+  <build_depend>message_filters</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  
   <!-- Dependencies needed after this package is compiled. -->
   <run_depend>cv_bridge</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
@@ -29,7 +34,12 @@
   <run_depend>roslib</run_depend>
   <run_depend>rosbag</run_depend>
   <run_depend>lsd_slam_viewer</run_depend>
-
+  <run_depend>tf2_ros</run_depend>
+  <run_depend>eigen_conversions</run_depend>
+  <run_depend>message_filters</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>cv_bridge</run_depend>
+  
   <!-- Dependencies needed only for running tests. -->
   <!-- <test_depend>cv_bridge</test_depend> -->
   <!-- <test_depend>dynamic_reconfigure</test_depend> -->

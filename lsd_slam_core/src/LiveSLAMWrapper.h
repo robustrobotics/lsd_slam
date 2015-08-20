@@ -52,8 +52,9 @@ public:
 
 	/** Destructor. */
 	~LiveSLAMWrapper();
-	
-	
+
+  bool inited() { return isInitialized; }
+
 	/** Runs the main processing loop. Will never return. */
 	void Loop();
 	
@@ -62,6 +63,19 @@ public:
 	
 	/** Resets everything, starting the odometry from the beginning again. */
 	void resetAll();
+
+  /**
+   * \brief Initialize from ground truth idepths.
+   *
+   * Call this before run().
+   *
+   * @param time[in] Timestamp.
+   * @param img[in] Image.
+   * @param depth[in] Depthmap (NOT inverse depthmap)
+   */
+  void initializeFromGTDepth(const double time, const cv::Mat& img,
+                             const cv::Mat& depth,
+                             const Sophus::Sim3f& pose = Sophus::Sim3f());
 
 	/** Callback function for new RGB images. */
 	void newImageCallback(const cv::Mat& img, Timestamp imgTime);

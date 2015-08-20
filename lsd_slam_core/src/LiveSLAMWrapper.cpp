@@ -108,6 +108,30 @@ void LiveSLAMWrapper::Loop()
 	}
 }
 
+void LiveSLAMWrapper::initializeFromGTDepth(const double time, const cv::Mat& img,
+                                            const cv::Mat& idepth,
+                                            const Sophus::Sim3f& pose) {
+  ++imageSeqNumber;
+
+  // Convert image to grayscale, if necessary
+  cv::Mat grayImg;
+  uint8_t* rgb = nullptr;
+  if (img.channels() == 1) {
+    grayImg = img;
+  } else {
+    cvtColor(img, grayImg, CV_RGB2GRAY);
+    rgb = img.data;
+  }
+
+  // Assert that we work with 8 bit images
+  assert(grayImg.elemSize() == 1);
+
+  monoOdometry->gtDepthInit(grayImg.data, reinterpret_cast<float*>(idepth.data),
+                     time, 1); //, pose);
+  isInitialized = true;
+
+  return;
+}
 
 void LiveSLAMWrapper::newImageCallback(const cv::Mat& img, Timestamp imgTime)
 {

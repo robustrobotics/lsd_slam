@@ -1,0 +1,16 @@
+<launch>
+
+  <arg name="image" default="/kinect/rgb/image_rect" />
+  <arg name="camera_info" default="/kinect/rgb/camera_info" />
+  <arg name="depth" default="/kinect/depth/image" />
+  <arg name="depth_camera_info" default="/kinect/depth/camera_info" />
+  
+  <!-- Core algorithm. -->
+  <node pkg="lsd_slam_core" type="lsd_slam_rgbd" name="lsd_slam" output="screen">
+    <!-- <remap from="image" to="/camera/image_rect" /> -->
+    <remap from="image" to="$(arg image)" />
+    <remap from="camera_info" to="$(arg camera_info)" />
+    <remap from="depth" to="$(arg depth)" />
+    <remap from="depth_camera_info" to="$(arg depth_camera_info)" />    
+  </node>
+</launch>

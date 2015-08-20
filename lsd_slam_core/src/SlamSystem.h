@@ -74,7 +74,8 @@ public:
 	~SlamSystem();
 
 	void randomInit(uchar* image, double timeStamp, int id);
-	void gtDepthInit(uchar* image, float* depth, double timeStamp, int id);
+  void gtDepthInit(uchar* image, float* depth, double timeStamp, int id,
+                   const Sophus::Sim3f& pose = Sophus::Sim3f());
 
 	
 

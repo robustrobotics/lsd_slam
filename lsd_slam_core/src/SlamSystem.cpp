@@ -828,13 +828,15 @@ bool SlamSystem::doMappingIteration()
 }
 
 
-void SlamSystem::gtDepthInit(uchar* image, float* depth, double timeStamp, int id)
+void SlamSystem::gtDepthInit(uchar* image, float* depth, double timeStamp, int id,
+                             const Sophus::Sim3f& pose)
 {
 	printf("Doing GT initialization!\n");
 
 	currentKeyFrameMutex.lock();
 
-	currentKeyFrame.reset(new Frame(id, width, height, K, timeStamp, image));
+  currentKeyFrame.reset(new Frame(id, width, height, K, timeStamp, image));
+  currentKeyFrame->pose->thisToParent_raw = pose.cast<double>();
 	currentKeyFrame->setDepthFromGroundTruth(depth);
 
 	map->initializeFromGTDepth(currentKeyFrame.get());

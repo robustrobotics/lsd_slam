@@ -94,9 +94,15 @@ Sim3 FramePoseStruct::getCamToWorld(int recursionDepth)
 	if(cacheValidFor == cacheValidCounter)
 		return camToWorld;
 
-	// return id if there is no parent (very first frame)
-	if(trackingParent == nullptr)
-		return camToWorld = Sim3();
+  // // return id if there is no parent (very first frame)
+  // if(trackingParent == nullptr)
+  // 	return camToWorld = Sim3();
+
+  // If this is the first frame return thisToParent_raw. Should be either the
+  // identity or what was set externally.
+  if (trackingParent == nullptr) {
+    return camToWorld = thisToParent_raw;
+  }
 
 	// abs. pose is computed from the parent's abs. pose, and cached.
 	cacheValidFor = cacheValidCounter;

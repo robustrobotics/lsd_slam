@@ -4,7 +4,13 @@
   <arg name="camera_info" default="/kinect/rgb/camera_info" />
   <arg name="depth" default="/kinect/depth/image" />
   <arg name="depth_camera_info" default="/kinect/depth/camera_info" />
+  <arg name="frame_id" default="camera_world" />
   
+  <!-- camera RDF to FLU transform -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="camera_world_to_world"
+        args="0.0 0.0 0.0 0.5 -0.5 0.5 -0.5 world $(arg frame_id)" >
+  </node>
+
   <!-- Core algorithm. -->
   <node pkg="lsd_slam_core" type="lsd_slam_rgbd" name="lsd_slam" output="screen">
     <!-- <remap from="image" to="/camera/image_rect" /> -->

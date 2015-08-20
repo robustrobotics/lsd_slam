@@ -2,6 +2,12 @@
 
   <arg name="image" default="/image_rect" />
   <arg name="camera_info" default="/camera_info" />
+  <arg name="frame_id" default="camera_world" />
+  
+  <!-- camera RDF to FLU transform -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="camera_world_to_world"
+        args="0.0 0.0 0.0 0.5 -0.5 0.5 -0.5 world $(arg frame_id)" >
+  </node>
   
   <!-- Core algorithm. -->
   <node pkg="lsd_slam_core" type="live_slam" name="live_slam" output="screen">

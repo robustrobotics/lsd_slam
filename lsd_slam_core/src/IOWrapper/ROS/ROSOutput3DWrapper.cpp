@@ -60,6 +60,8 @@ ROSOutput3DWrapper::ROSOutput3DWrapper(int width, int height)
 	pose_channel = nh_.resolveName("lsd_slam/pose");
 	pose_publisher = nh_.advertise<geometry_msgs::PoseStamped>(pose_channel,1);
 
+  pose_delta_pub = nh_.advertise<geometry_msgs::PoseStamped>("lsd_slam/pose_delta", 10);
+
   slam_system_stats_pub =
     nh_.advertise<lsd_slam_viewer::SlamSystemStats>("lsd_slam/slam_system_stats", 1);
 
@@ -163,7 +165,30 @@ void ROSOutput3DWrapper::publishTrackedFrame(Frame* kf)
 
 	pMsg.header.stamp = ros::Time(kf->timestamp());
   pMsg.header.frame_id = "camera_world";
-	pose_publisher.publish(pMsg);
+  pose_publisher.publish(pMsg);
+
+  // Publish pose relative to keyframe. This is needed to assemble the finalized
+  // trajectory.
+  SE3 cam_to_kf = se3FromSim3(kf->pose->thisToParent_raw);
+
+  geometry_msgs::PoseStamped pose_delta_msg;
+  pose_delta_msg.header.stamp = ros::Time(kf->timestamp());
+
+  if (kf->pose->trackingParent != nullptr) {
+    pose_delta_msg.header.frame_id = std::to_string(kf->pose->trackingParent->frameID);
+  } else {
+    pose_delta_msg.header.frame_id = "camera_world";
+  }
+
+  pose_delta_msg.pose.position.x = cam_to_kf.translation()[0];
+  pose_delta_msg.pose.position.y = cam_to_kf.translation()[1];
+  pose_delta_msg.pose.position.z = cam_to_kf.translation()[2];
+  pose_delta_msg.pose.orientation.x = cam_to_kf.so3().unit_quaternion().x();
+  pose_delta_msg.pose.orientation.y = cam_to_kf.so3().unit_quaternion().y();
+  pose_delta_msg.pose.orientation.z = cam_to_kf.so3().unit_quaternion().z();
+  pose_delta_msg.pose.orientation.w = cam_to_kf.so3().unit_quaternion().w();
+
+  pose_delta_pub.publish(pose_delta_msg);
 }
 
 

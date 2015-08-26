@@ -110,6 +110,8 @@ private:
 	std::string pose_channel;
 	ros::Publisher pose_publisher;
 
+  ros::Publisher pose_delta_pub;
+
   ros::Publisher slam_system_stats_pub;
   ros::Publisher depth_map_stats_pub;
 

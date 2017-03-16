@@ -147,11 +147,13 @@ int main(int argc,  char** argv ) {
     cv::Mat1b img_gray;
     cv::cvtColor(rgb, img_gray, cv::COLOR_RGB2GRAY);
 
+    SE3 pose(q.cast<double>(), t.cast<double>());
+
     // Process image.
     if (num_imgs == 0) {
-      system->randomInit(img_gray.data, time, img_id);
+      system->randomInit(img_gray.data, time, img_id, pose);
     } else {
-      system->trackFrame(img_gray.data, img_id , false, time);
+      system->trackFrame(img_gray.data, img_id , false, time, &pose);
     }
 
     ros::spinOnce();

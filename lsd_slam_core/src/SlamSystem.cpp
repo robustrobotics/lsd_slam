@@ -866,7 +866,7 @@ void SlamSystem::randomInit(uchar* image, double timeStamp, int id,
 	currentKeyFrameMutex.lock();
 
   currentKeyFrame.reset(new Frame(id, width, height, K, timeStamp, image));
-  currentKeyFrame->pose->thisToParent_raw = sim3FromSE3(pose, 1) ;
+  currentKeyFrame->pose->thisToParent_raw = sim3FromSE3(pose, 1);
 	map->initializeRandomly(currentKeyFrame.get());
 	keyFrameGraph->addFrame(currentKeyFrame.get());
 
@@ -932,11 +932,56 @@ void SlamSystem::trackFrame(uchar* image, unsigned int frameID, bool blockUntilM
 	struct timeval tv_start, tv_end;
 	gettimeofday(&tv_start, NULL);
 
-	SE3 newRefToFrame_poseUpdate = tracker->trackFrame(
-			trackingReference,
-			trackingNewFrame.get(),
-			frameToReference_initialEstimate);
+  SE3 newRefToFrame_poseUpdate;
+  if (ext_pose == nullptr) {
+    newRefToFrame_poseUpdate = tracker->trackFrame(
+        trackingReference,
+        trackingNewFrame.get(),
+        frameToReference_initialEstimate);
+  } else {
+    // printf("img %i\nref q = (%f, %f, %f, %f), t = (%f, %f, %f)\n",
+    //        frameID, trackingReference->keyframe->pose->getCamToWorld().quaternion().w(),
+    //        trackingReference->keyframe->pose->getCamToWorld().quaternion().x(),
+    //        trackingReference->keyframe->pose->getCamToWorld().quaternion().y(),
+    //        trackingReference->keyframe->pose->getCamToWorld().quaternion().z(),
+    //        trackingReference->keyframe->pose->getCamToWorld().translation()(0),
+    //        trackingReference->keyframe->pose->getCamToWorld().translation()(1),
+    //        trackingReference->keyframe->pose->getCamToWorld().translation()(2));
 
+    // printf("kf q = (%f, %f, %f, %f), t = (%f, %f, %f)\n",
+    //        currentKeyFrame->pose->thisToParent_raw.quaternion().w(),
+    //        currentKeyFrame->pose->thisToParent_raw.quaternion().x(),
+    //        currentKeyFrame->pose->thisToParent_raw.quaternion().y(),
+    //        currentKeyFrame->pose->thisToParent_raw.quaternion().z(),
+    //        currentKeyFrame->pose->thisToParent_raw.translation()(0),
+    //        currentKeyFrame->pose->thisToParent_raw.translation()(1),
+    //        currentKeyFrame->pose->thisToParent_raw.translation()(2));
+
+    // printf("curr q = (%f, %f, %f, %f), t = (%f, %f, %f)\n",
+    //        ext_pose->unit_quaternion().w(),
+    //        ext_pose->unit_quaternion().x(),
+    //        ext_pose->unit_quaternion().y(),
+    //        ext_pose->unit_quaternion().z(),
+    //        ext_pose->translation()(0),
+    //        ext_pose->translation()(1),
+    //        ext_pose->translation()(2));
+
+    // printf("kf  id = %i\n", currentKeyFrame->id());
+    // printf("ref id = %i\n", trackingReference->keyframe->id());
+
+    float scale = trackingReference->keyframe->pose->getCamToWorld().scale();
+    Sim3 frame_to_kf_sim3 =
+        trackingReference->keyframe->pose->getCamToWorld().inverse() * sim3FromSE3(*ext_pose, scale);
+    SE3 frame_to_kf(frame_to_kf_sim3.quaternion(), frame_to_kf_sim3.translation());
+    newRefToFrame_poseUpdate = frame_to_kf;
+
+    trackingReference->keyframe->numFramesTrackedOnThis++;
+    trackingNewFrame->initialTrackedResidual = 0.0f;
+    trackingNewFrame->pose->thisToParent_raw = sim3FromSE3(frame_to_kf, 1);
+    trackingNewFrame->pose->trackingParent = trackingReference->keyframe->pose;
+
+    tracker->trackingWasGood = true;
+  }
 
 	gettimeofday(&tv_end, NULL);
 	msTrackFrame = 0.9*msTrackFrame + 0.1*((tv_end.tv_sec-tv_start.tv_sec)*1000.0f + (tv_end.tv_usec-tv_start.tv_usec)/1000.0f);

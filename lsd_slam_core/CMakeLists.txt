@@ -4,7 +4,17 @@ cmake_minimum_required(VERSION 2.8.3)
 project(lsd_slam_core)
 # Load catkin and all dependencies required for this package
 # TODO: remove all from COMPONENTS that are not catkin packages.
-find_package(catkin REQUIRED COMPONENTS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag lsd_slam_viewer roscpp)
+set(ROS_SENSOR_STREAMS_REQ_PKGS
+  roscpp
+  image_transport
+  message_filters
+  tf2_ros
+  sensor_msgs
+  geometry_msgs
+  cv_bridge
+  camera_info_manager
+  image_geometry)
+find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure roslib rosbag lsd_slam_viewer ${ROS_SENSOR_STREAMS_REQ_PKGS})
 
 # include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
@@ -127,8 +137,11 @@ target_link_libraries(live_slam lsdslam)
 add_executable(dataset src/main_on_images.cpp)
 target_link_libraries(dataset lsdslam)
 
-# build image node
-add_executable(main_tum_offline src/main_tum_offline.cpp)
+# build tum offline node.
+include_directories(src/ros_sensor_streams/src)
+add_executable(main_tum_offline src/main_tum_offline.cpp
+  src/ros_sensor_streams/src/ros_sensor_streams/tum_rgbd_offline_stream.h
+  src/ros_sensor_streams/src/ros_sensor_streams/tum_rgbd_offline_stream.cc)
 target_link_libraries(main_tum_offline lsdslam)
 
 ## Generate added messages and services with any dependencies listed here

@@ -1,2 +1,2 @@
-project(lsd_slam)
-catkin_package()
+# project(lsd_slam)
+# catkin_package()

@@ -1,13 +1,25 @@
 <launch>
-  
-  <arg name="image" default="/image_rect" />
-  <arg name="camera_info" default="/camera_info" />
-  
+
+  <!-- Input params. -->
+  <arg name="input_file" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household/groundtruth_rgb_depth.txt" />
+  <arg name="calib_file" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household/kinect.yaml" />
+  <arg name="input_frame" default="RDF_IN_FLU" />
+  <arg name="depth_scale_factor" default="5000.0" />
+
+  <arg name="camera_frame_id" default="camera" />
+  <arg name="camera_world_frame_id" default="camera_world" />
+  <arg name="rate" default="30.0" />
+
   <include file="$(find lsd_slam)/launch/viewer.launch" />
 
-  <include file="$(find lsd_slam)/launch/live_slam.launch">
-    <arg name="image" value="$(arg image)" />
-    <arg name="camera_info" value="$(arg camera_info)" />
-  </include>
+  <node pkg="lsd_slam_core" type="main_tum_offline" name="tum_offline" output="screen">
+    <param name="input_file" value="$(arg input_file)" />
+    <param name="calib_file" value="$(arg calib_file)" />
+    <param name="input_frame" value="$(arg input_frame)" />
+    <param name="depth_scale_factor" value="$(arg depth_scale_factor)" />
+    <param name="camera_frame_id" value="$(arg camera_frame_id)" />
+    <param name="camera_world_frame_id" value="$(arg camera_world_frame_id)" />
+    <param name="rate" value="$(arg rate)" />
+  </node>
 
 </launch>

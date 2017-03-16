@@ -73,7 +73,7 @@ public:
 	SlamSystem& operator=(const SlamSystem&) = delete;
 	~SlamSystem();
 
-	void randomInit(uchar* image, double timeStamp, int id);
+  void randomInit(uchar* image, double timeStamp, int id, const SE3& pose = SE3());
 	void gtDepthInit(uchar* image, float* depth, double timeStamp, int id);
 
 	

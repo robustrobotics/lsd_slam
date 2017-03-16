@@ -127,6 +127,10 @@ target_link_libraries(live_slam lsdslam)
 add_executable(dataset src/main_on_images.cpp)
 target_link_libraries(dataset lsdslam)
 
+# build image node
+add_executable(main_tum_offline src/main_tum_offline.cpp)
+target_link_libraries(main_tum_offline lsdslam)
+
 ## Generate added messages and services with any dependencies listed here
 #generate_messages(
 #    #TODO DEPENDENCIES geometry_msgs std_msgs

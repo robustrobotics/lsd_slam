@@ -58,6 +58,8 @@ add_message_files(
   FILES
   keyframeGraphMsg.msg
   keyframeMsg.msg
+  SlamSystemStats.msg
+  DepthMapStats.msg
 )
 
 

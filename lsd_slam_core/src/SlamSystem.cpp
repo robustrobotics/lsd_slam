@@ -649,6 +649,18 @@ void SlamSystem::addTimingSamples()
 		}
 	}
 
+  if (outputWrapper != nullptr) {
+    outputWrapper->publishSlamSystemStats(msTrackFrame, msOptimizationIteration,
+                                          msFindConstraintsItaration, msFindReferences,
+                                          nAvgTrackFrame, nAvgOptimizationIteration,
+                                          nAvgFindConstraintsItaration, nAvgFindReferences);
+    outputWrapper->publishDepthMapStats(map->msUpdate, map->msCreate, map->msFinalize,
+                                        map->msObserve, map->msRegularize, map->msPropagate,
+                                        map->msFillHoles, map->msSetDepth,
+                                        map->nAvgUpdate, map->nAvgCreate, map->nAvgFinalize,
+                                        map->nAvgObserve, map->nAvgRegularize, map->nAvgPropagate,
+                                        map->nAvgFillHoles, map->nAvgSetDepth);
+  }
 }
 
 

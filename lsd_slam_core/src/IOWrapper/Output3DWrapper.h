@@ -61,7 +61,19 @@ public:
 	virtual void publishTrajectory(std::vector<Eigen::Matrix<float, 3, 1>> trajectory, std::string identifier) {};
 	virtual void publishTrajectoryIncrement(Eigen::Matrix<float, 3, 1> pt, std::string identifier) {};
 
-	virtual void publishDebugInfo(Eigen::Matrix<float, 20, 1> data) {};
+  virtual void publishDebugInfo(Eigen::Matrix<float, 20, 1> data) {};
+
+  virtual void publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
+                                    float msObserve, float msRegularize, float msPropagate,
+                                    float msFillHoles, float msSetDepth,
+                                    float nAvgUpdate, float nAvgCreate, float nAvgFinalize,
+                                    float nAvgObserve, float nAvgRegularize, float nAvgPropagate,
+                                    float nAvgFillHoles, float nAvgSetDepth) {}
+
+  virtual void publishSlamSystemStats(float msTrackFrame, float msOptimizationIteration,
+                                      float msFindConstraintsItaration, float msFindReferences,
+                                      float nAvgTrackFrame, float nAvgOptimizationIteration,
+                                      float nAvgFindConstraintsItaration, float nAvgFindReferences) {}
 
 };
 }

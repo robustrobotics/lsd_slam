@@ -27,6 +27,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "lsd_slam_viewer/keyframeGraphMsg.h"
 #include "lsd_slam_viewer/keyframeMsg.h"
+#include "lsd_slam_viewer/SlamSystemStats.h"
+#include "lsd_slam_viewer/DepthMapStats.h"
 
 #include "DataStructures/Frame.h"
 #include "GlobalMapping/KeyFrameGraph.h"
@@ -58,6 +60,11 @@ ROSOutput3DWrapper::ROSOutput3DWrapper(int width, int height)
 	pose_channel = nh_.resolveName("lsd_slam/pose");
 	pose_publisher = nh_.advertise<geometry_msgs::PoseStamped>(pose_channel,1);
 
+  slam_system_stats_pub =
+    nh_.advertise<lsd_slam_viewer::SlamSystemStats>("lsd_slam/slam_system_stats", 1);
+
+  depth_map_stats_pub =
+    nh_.advertise<lsd_slam_viewer::DepthMapStats>("lsd_slam/depth_map_stats", 1);
 
 	publishLvl=0;
 }
@@ -210,5 +217,55 @@ void ROSOutput3DWrapper::publishDebugInfo(Eigen::Matrix<float, 20, 1> data)
 
 	debugInfo_publisher.publish(msg);
 }
+
+void ROSOutput3DWrapper::
+publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
+                     float msObserve, float msRegularize, float msPropagate,
+                     float msFillHoles, float msSetDepth,
+                     float nAvgUpdate, float nAvgCreate, float nAvgFinalize,
+                     float nAvgObserve, float nAvgRegularize, float nAvgPropagate,
+                     float nAvgFillHoles, float nAvgSetDepth) {
+  lsd_slam_viewer::DepthMapStats::Ptr msg(new lsd_slam_viewer::DepthMapStats());
+
+  msg->msUpdate = msUpdate;
+  msg->msCreate = msCreate;
+  msg->msFinalize = msFinalize;
+  msg->msObserve = msObserve;
+  msg->msFillHoles = msFillHoles;
+  msg->msPropagate = msPropagate;
+  msg->msSetDepth = msSetDepth;
+  msg->nAvgUpdate = nAvgUpdate;
+  msg->nAvgCreate = nAvgCreate;
+  msg->nAvgFinalize = nAvgFinalize;
+  msg->nAvgObserve = nAvgObserve;
+  msg->nAvgFillHoles = nAvgFillHoles;
+  msg->nAvgPropagate = nAvgPropagate;
+
+  depth_map_stats_pub.publish(msg);
+
+  return;
+}
+
+void ROSOutput3DWrapper::
+publishSlamSystemStats(float msTrackFrame, float msOptimizationIteration,
+                       float msFindConstraintsItaration, float msFindReferences,
+                       float nAvgTrackFrame, float nAvgOptimizationIteration,
+                       float nAvgFindConstraintsItaration, float nAvgFindReferences) {
+  lsd_slam_viewer::SlamSystemStats::Ptr msg(new lsd_slam_viewer::SlamSystemStats());
+
+  msg->msTrackFrame = msTrackFrame;
+  msg->msOptimizationIteration = msOptimizationIteration;
+  msg->msFindConstraintsItaration = msFindConstraintsItaration;
+  msg->msFindReferences = msFindReferences;
+  msg->nAvgTrackFrame = nAvgTrackFrame;
+  msg->nAvgOptimizationIteration = nAvgOptimizationIteration;
+  msg->nAvgFindConstraintsItaration = nAvgFindConstraintsItaration;
+  msg->nAvgFindReferences = nAvgFindReferences;
+
+  slam_system_stats_pub.publish(msg);
+
+  return;
+}
+
 
 }

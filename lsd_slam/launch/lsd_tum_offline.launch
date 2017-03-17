@@ -38,6 +38,8 @@
               /lsd_slam/liveframes
               /lsd_slam/pose
               /lsd_slam/debug
+              /lsd_slam/slam_system_stats
+              /lsd_slam/depth_map_stats
               /tf
               /tf_static
               -o lsd">

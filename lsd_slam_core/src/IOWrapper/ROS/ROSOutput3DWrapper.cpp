@@ -219,13 +219,17 @@ void ROSOutput3DWrapper::publishDebugInfo(Eigen::Matrix<float, 20, 1> data)
 }
 
 void ROSOutput3DWrapper::
-publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
+publishDepthMapStats(double time,
+                     float msUpdate, float msCreate, float msFinalize,
                      float msObserve, float msRegularize, float msPropagate,
                      float msFillHoles, float msSetDepth,
                      float nAvgUpdate, float nAvgCreate, float nAvgFinalize,
                      float nAvgObserve, float nAvgRegularize, float nAvgPropagate,
                      float nAvgFillHoles, float nAvgSetDepth) {
   lsd_slam_viewer::DepthMapStats::Ptr msg(new lsd_slam_viewer::DepthMapStats());
+
+  msg->header = std_msgs::Header();
+  msg->header.stamp.fromSec(time);
 
   msg->msUpdate = msUpdate;
   msg->msCreate = msCreate;
@@ -247,11 +251,15 @@ publishDepthMapStats(float msUpdate, float msCreate, float msFinalize,
 }
 
 void ROSOutput3DWrapper::
-publishSlamSystemStats(float msTrackFrame, float msOptimizationIteration,
+publishSlamSystemStats(double time,
+                       float msTrackFrame, float msOptimizationIteration,
                        float msFindConstraintsItaration, float msFindReferences,
                        float nAvgTrackFrame, float nAvgOptimizationIteration,
                        float nAvgFindConstraintsItaration, float nAvgFindReferences) {
   lsd_slam_viewer::SlamSystemStats::Ptr msg(new lsd_slam_viewer::SlamSystemStats());
+
+  msg->header = std_msgs::Header();
+  msg->header.stamp.fromSec(time);
 
   msg->msTrackFrame = msTrackFrame;
   msg->msOptimizationIteration = msOptimizationIteration;

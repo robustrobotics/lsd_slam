@@ -15,6 +15,9 @@
 
   <node pkg="lsd_slam_core" type="main_tum_offline" name="tum_offline" output="screen">
     <param name="doSLAM" value="false" />
+    <param name="KFUsageWeight" value="0.37" />
+    <param name="KFDistWeight" value="0.37" />
+
     <param name="input_file" value="$(arg input_file)" />
     <param name="calib_file" value="$(arg calib_file)" />
     <param name="input_frame" value="$(arg input_frame)" />

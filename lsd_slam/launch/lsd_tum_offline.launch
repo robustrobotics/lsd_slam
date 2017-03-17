@@ -1,8 +1,9 @@
 <launch>
-
   <!-- Input params. -->
-  <arg name="input_file" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household/groundtruth_rgb_depth.txt" />
-  <arg name="calib_file" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household/kinect.yaml" />
+  <arg name="dataset_root" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household" />
+
+  <arg name="input_file" default="$(arg dataset_root)/groundtruth_rgb_depth.txt" />
+  <arg name="calib_file" default="$(arg dataset_root)/kinect.yaml" />
   <arg name="input_frame" default="RDF_IN_FLU" />
   <arg name="depth_scale_factor" default="5000.0" />
 

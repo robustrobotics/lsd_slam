@@ -112,6 +112,7 @@ include_directories(
   ${CSPARSE_INCLUDE_DIR} #Has been set by SuiteParse
   ${CHOLMOD_INCLUDE_DIR} #Has been set by SuiteParse
   ${G2O_INCLUDE_DIR}
+  .src/stats_tracker/src # Needed for tracking CPU load.
 )
 
 

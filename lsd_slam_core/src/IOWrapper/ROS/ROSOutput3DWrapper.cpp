@@ -66,7 +66,9 @@ ROSOutput3DWrapper::ROSOutput3DWrapper(int width, int height)
   depth_map_stats_pub =
     nh_.advertise<lsd_slam_viewer::DepthMapStats>("lsd_slam/depth_map_stats", 1);
 
-	publishLvl=0;
+  publishLvl=0;
+
+  load_count_ = 0;
 }
 
 ROSOutput3DWrapper::~ROSOutput3DWrapper()
@@ -269,6 +271,25 @@ publishSlamSystemStats(double time,
   msg->nAvgOptimizationIteration = nAvgOptimizationIteration;
   msg->nAvgFindConstraintsItaration = nAvgFindConstraintsItaration;
   msg->nAvgFindReferences = nAvgFindReferences;
+
+  // Publish load.
+  if ((load_count_ % 15) == 0) {
+    // Integrate load.
+    load_tracker_.get(&max_load_, &sys_load_, &pid_load_);
+  }
+  msg->max_load_cpu = max_load_.cpu;
+  msg->max_load_mem = max_load_.mem;
+  msg->max_load_swap = max_load_.swap;
+
+  msg->sys_load_cpu = sys_load_.cpu;
+  msg->sys_load_mem = sys_load_.mem;
+  msg->sys_load_swap = sys_load_.swap;
+
+  msg->pid_load_cpu = pid_load_.cpu;
+  msg->pid_load_mem = pid_load_.mem;
+  msg->pid_load_swap = pid_load_.swap;
+
+  load_count_++;
 
   slam_system_stats_pub.publish(msg);
 

@@ -23,6 +23,7 @@
 #include <ros/ros.h>
 #include "IOWrapper/Output3DWrapper.h"
 
+#include "stats_tracker/load_tracker.h"
 
 namespace lsd_slam
 {
@@ -114,6 +115,12 @@ private:
 
   ros::Publisher slam_system_stats_pub;
   ros::Publisher depth_map_stats_pub;
+
+  int load_count_;
+  stats_tracker::LoadTracker load_tracker_;
+  stats_tracker::Load max_load_;
+  stats_tracker::Load sys_load_;
+  stats_tracker::Load pid_load_;
 
 	ros::NodeHandle nh_;
 };

@@ -1,4 +1,6 @@
 <launch>
+  <arg name="bag_data" default="false" />
+
   <!-- Input params. -->
   <arg name="dataset_root" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household" />
 
@@ -25,6 +27,20 @@
     <param name="camera_frame_id" value="$(arg camera_frame_id)" />
     <param name="camera_world_frame_id" value="$(arg camera_world_frame_id)" />
     <param name="rate" value="$(arg rate)" />
+  </node>
+
+  <!-- Bag the outputs. -->
+  <node if="$(arg bag_data)"
+        pkg="rosbag" type="record" name="lsd_bagger"
+        output="screen"
+        args="/lsd_slam/graph
+              /lsd_slam/keyframes
+              /lsd_slam/liveframes
+              /lsd_slam/pose
+              /lsd_slam/debug
+              /tf
+              /tf_static
+              -o lsd">
   </node>
 
 </launch>

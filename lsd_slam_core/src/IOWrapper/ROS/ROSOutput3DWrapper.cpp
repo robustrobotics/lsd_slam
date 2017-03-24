@@ -23,7 +23,6 @@
 #include <ros/ros.h>
 #include "util/settings.h"
 
-
 #include "std_msgs/Float32MultiArray.h"
 #include "lsd_slam_viewer/keyframeGraphMsg.h"
 #include "lsd_slam_viewer/keyframeMsg.h"
@@ -33,6 +32,9 @@
 #include "sophus/sim3.hpp"
 #include "geometry_msgs/PoseStamped.h"
 #include "GlobalMapping/g2oTypeSim3Sophus.h"
+
+#include <geometry_msgs/TransformStamped.h>
+#include <tf/transform_broadcaster.h>
 
 namespace lsd_slam
 {
@@ -157,6 +159,23 @@ void ROSOutput3DWrapper::publishTrackedFrame(Frame* kf)
 	pMsg.header.stamp = ros::Time(kf->timestamp());
 	pMsg.header.frame_id = "world";
 	pose_publisher.publish(pMsg);
+
+	// also publish poses to /tf
+	geometry_msgs::TransformStamped tf_msg;
+
+	tf_msg.header.stamp = ros::Time(kf->timestamp());
+	tf_msg.header.frame_id = "world";
+	tf_msg.child_frame_id = "/camera";
+
+	tf_msg.transform.translation.x = camToWorld.translation()[0];
+	tf_msg.transform.translation.y = camToWorld.translation()[1];
+	tf_msg.transform.translation.z = camToWorld.translation()[2];
+	tf_msg.transform.rotation.x = camToWorld.so3().unit_quaternion().x();
+	tf_msg.transform.rotation.y = camToWorld.so3().unit_quaternion().y();
+	tf_msg.transform.rotation.z = camToWorld.so3().unit_quaternion().z();
+	tf_msg.transform.rotation.w = camToWorld.so3().unit_quaternion().w();
+
+	tf_publisher_.sendTransform(tf_msg);
 }
 
 

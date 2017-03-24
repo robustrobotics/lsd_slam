@@ -22,6 +22,7 @@
 
 #include <ros/ros.h>
 #include "IOWrapper/Output3DWrapper.h"
+#include <tf/transform_broadcaster.h>
 
 
 namespace lsd_slam
@@ -95,9 +96,10 @@ private:
 	std::string debugInfo_channel;
 	ros::Publisher debugInfo_publisher;
 
-
 	std::string pose_channel;
 	ros::Publisher pose_publisher;
+
+	tf::TransformBroadcaster tf_publisher_;
 
 	ros::NodeHandle nh_;
 };

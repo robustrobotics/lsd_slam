@@ -25,7 +25,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "ros/package.h"
+// #include "ros/package.h"
 
 KeyFrameGraphDisplay::KeyFrameGraphDisplay()
 {
@@ -57,41 +57,41 @@ void KeyFrameGraphDisplay::draw()
 	}
 
 
-	if(flushPointcloud)
-	{
+	// if(flushPointcloud)
+	// {
 
-		printf("Flushing Pointcloud to %s!\n", (ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
-		std::ofstream f((ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
-		int numpts = 0;
-		for(unsigned int i=0;i<keyframes.size();i++)
-		{
-			if((int)i > cutFirstNKf)
-				numpts += keyframes[i]->flushPC(&f);
-		}
-		f.flush();
-		f.close();
+	// 	printf("Flushing Pointcloud to %s!\n", (ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
+	// 	std::ofstream f((ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
+	// 	int numpts = 0;
+	// 	for(unsigned int i=0;i<keyframes.size();i++)
+	// 	{
+	// 		if((int)i > cutFirstNKf)
+	// 			numpts += keyframes[i]->flushPC(&f);
+	// 	}
+	// 	f.flush();
+	// 	f.close();
 
-		std::ofstream f2((ros::package::getPath("lsd_slam_viewer")+"/pc.ply").c_str());
-		f2 << std::string("ply\n");
-		f2 << std::string("format binary_little_endian 1.0\n");
-		f2 << std::string("element vertex ") << numpts << std::string("\n");
-		f2 << std::string("property float x\n");
-		f2 << std::string("property float y\n");
-		f2 << std::string("property float z\n");
-		f2 << std::string("property float intensity\n");
-		f2 << std::string("end_header\n");
+	// 	std::ofstream f2((ros::package::getPath("lsd_slam_viewer")+"/pc.ply").c_str());
+	// 	f2 << std::string("ply\n");
+	// 	f2 << std::string("format binary_little_endian 1.0\n");
+	// 	f2 << std::string("element vertex ") << numpts << std::string("\n");
+	// 	f2 << std::string("property float x\n");
+	// 	f2 << std::string("property float y\n");
+	// 	f2 << std::string("property float z\n");
+	// 	f2 << std::string("property float intensity\n");
+	// 	f2 << std::string("end_header\n");
 
-		std::ifstream f3((ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
-		while(!f3.eof()) f2.put(f3.get());
+	// 	std::ifstream f3((ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
+	// 	while(!f3.eof()) f2.put(f3.get());
 
-		f2.close();
-		f3.close();
+	// 	f2.close();
+	// 	f3.close();
 
-		system(("rm "+ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
-		flushPointcloud = false;
-		printf("Done Flushing Pointcloud with %d points!\n", numpts);
+	// 	system(("rm "+ros::package::getPath("lsd_slam_viewer")+"/pc_tmp.ply").c_str());
+	// 	flushPointcloud = false;
+	// 	printf("Done Flushing Pointcloud with %d points!\n", numpts);
 
-	}
+	// }
 
 
 	if(printNumbers)

@@ -38,10 +38,14 @@ find_package(catkin REQUIRED COMPONENTS ${CATKIN_REQ_PKGS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-find_package(Eigen3 REQUIRED)
 find_package(Sophus REQUIRED)
-find_package(OpenCV 2.4.8 REQUIRED COMPONENTS core)
+find_package(OpenCV REQUIRED COMPONENTS core)
 find_package(Boost 1.54 REQUIRED COMPONENTS system filesystem)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(EIGEN3 REQUIRED eigen3>=3.2)
+
+find_package(dataset_utils REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -144,7 +148,8 @@ catkin_package(
 # include_directories(include)
 include_directories(./src
   ${Sophus_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIR}
+  ${EIGEN3_INCLUDE_DIRS}
+  ${dataset_utils_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
@@ -157,7 +162,9 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/tracked_rgbd_stream.h
   src/${PROJECT_NAME}/tracked_rgbd_stream.cc
   src/${PROJECT_NAME}/tum_rgbd_offline_stream.h
-  src/${PROJECT_NAME}/tum_rgbd_offline_stream.cc)
+  src/${PROJECT_NAME}/tum_rgbd_offline_stream.cc
+  src/${PROJECT_NAME}/asl_rgbd_offline_stream.h
+  src/${PROJECT_NAME}/asl_rgbd_offline_stream.cc)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -176,6 +183,7 @@ add_library(${PROJECT_NAME}
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(${PROJECT_NAME}
+  ${dataset_utils_LIBRARIES}
   ${catkin_LIBRARIES})
 
 #############

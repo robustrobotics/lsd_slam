@@ -16,7 +16,12 @@ set(ROS_SENSOR_STREAMS_REQ_PKGS
   image_geometry)
 find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure roslib rosbag lsd_slam_viewer ${ROS_SENSOR_STREAMS_REQ_PKGS})
 
-# include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+# Required for ASL reader.
+find_package(PkgConfig REQUIRED) # For projects with pkg-config files.
+pkg_check_modules(YAML_CPP REQUIRED yaml-cpp>=0.5)
+include_directories(${YAML_CPP_INCLUDE_DIRS})
+
+include_directories(include ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
 # cmake_minimum_required(VERSION 2.8.7)
 project(lsd_slam_core)
@@ -42,8 +47,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(CMAKE_MODULE_PATH   ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 # Find my installation of OpenCV 2.4.8.
-find_package(OpenCV 2.4.8 EXACT REQUIRED 
-             HINTS /opt/opencv-2.4.8)
+find_package(OpenCV REQUIRED)
 
 find_package(Eigen3 REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
@@ -112,7 +116,7 @@ include_directories(
   ${CSPARSE_INCLUDE_DIR} #Has been set by SuiteParse
   ${CHOLMOD_INCLUDE_DIR} #Has been set by SuiteParse
   ${G2O_INCLUDE_DIR}
-  .src/stats_tracker/src # Needed for tracking CPU load.
+  ./src/stats_tracker/src # Needed for tracking CPU load.
 )
 
 
@@ -144,6 +148,20 @@ add_executable(main_tum_offline src/main_tum_offline.cpp
   src/ros_sensor_streams/src/ros_sensor_streams/tum_rgbd_offline_stream.h
   src/ros_sensor_streams/src/ros_sensor_streams/tum_rgbd_offline_stream.cc)
 target_link_libraries(main_tum_offline lsdslam)
+
+# build asl offline node.
+include_directories(src/ros_sensor_streams/src
+  src/dataset_utils/src)
+add_executable(main_asl_offline src/main_asl_offline.cpp
+  src/ros_sensor_streams/src/ros_sensor_streams/asl_rgbd_offline_stream.h
+  src/ros_sensor_streams/src/ros_sensor_streams/asl_rgbd_offline_stream.cc
+  src/dataset_utils/src/dataset_utils/assert.h
+  src/dataset_utils/src/dataset_utils/utils.h
+  src/dataset_utils/src/dataset_utils/utils.cc
+  src/dataset_utils/src/dataset_utils/asl/dataset.h
+  src/dataset_utils/src/dataset_utils/asl/types.h)
+target_link_libraries(main_asl_offline lsdslam
+  ${YAML_CPP_LIBRARIES})
 
 ## Generate added messages and services with any dependencies listed here
 #generate_messages(

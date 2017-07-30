@@ -77,7 +77,8 @@ class ThreadSafeQueue {
    * @return Reference.
    */
   const T& front() {
-    std::lock_guard<std::recursive_mutex> lock(mtx);
+    std::unique_lock<std::recursive_mutex> lock(mtx);
+    non_empty_.wait(lock, [this](){ return !queue.empty(); });
     return queue.front();
   }
 

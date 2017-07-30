@@ -28,9 +28,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "opencv2/opencv.hpp"
+// #include "opencv2/opencv.hpp"
 
-#include "ros/package.h"
+// #include "ros/package.h"
 
 KeyFrameDisplay::KeyFrameDisplay()
 {

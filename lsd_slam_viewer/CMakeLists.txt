@@ -6,7 +6,7 @@ project(lsd_slam_viewer)
 # TODO: remove all from COMPONENTS that are not catkin packages.
 find_package(catkin REQUIRED COMPONENTS cv_bridge dynamic_reconfigure sensor_msgs roslib rosbag message_generation roscpp)
 
-# include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
+include_directories(include ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS})
 # CATKIN_MIGRATION: removed during catkin migration
 # cmake_minimum_required(VERSION 2.4.6)
 project(lsd_slam_viewer)
@@ -35,8 +35,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 # Find my installation of OpenCV 2.4.8.
-find_package(OpenCV 2.4.8 EXACT REQUIRED 
-             HINTS /opt/opencv-2.4.8)
+find_package(OpenCV REQUIRED)
 
 find_package(OpenGL REQUIRED)
 set(QT_USE_QTOPENGL TRUE)
@@ -99,8 +98,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(viewer ${Boost_LIBRARIES})
 
 
-add_executable(videoStitch src/main_stitchVideos.cpp)
-target_link_libraries(videoStitch ${OpenCV_LIBS})
+# add_executable(videoStitch src/main_stitchVideos.cpp)
+# target_link_libraries(videoStitch ${OpenCV_LIBS})
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(

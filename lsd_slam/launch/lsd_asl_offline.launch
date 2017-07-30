@@ -2,8 +2,6 @@
   <arg name="bag_data" default="false" />
 
   <!-- Input params. -->
-  <arg name="dataset_root" default="/home/wng/Projects/rrg/data/tum_rgbd_benchmarks/rgbd_dataset_freiburg3_long_office_household" />
-
   <arg name="pose_path" default="/home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/state_groundtruth_estimate0" />
   <arg name="rgb_path" default="/home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/cam0" />
   <arg name="depth_path" default="/home/wng/Projects/rrg/data/euroc_mav_datasets/V1_01_easy/mav0/depthmap0" />
@@ -15,7 +13,7 @@
 
   <include file="$(find lsd_slam)/launch/viewer.launch" />
 
-  <node pkg="lsd_slam_core" type="main_tum_offline" name="tum_offline" output="screen">
+  <node pkg="lsd_slam_core" type="main_asl_offline" name="asl_offline" output="screen">
     <param name="doSLAM" value="false" />
     <param name="KFUsageWeight" value="0.37" />
     <param name="KFDistWeight" value="0.37" />

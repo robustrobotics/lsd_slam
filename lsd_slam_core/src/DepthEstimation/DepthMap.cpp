@@ -1293,6 +1293,8 @@ void DepthMap::createKeyFrame(Frame* new_keyframe)
 		numIdepth++;
 	}
 	float rescaleFactor = numIdepth / sumIdepth;
+  rescaleFactor = std::isnan(rescaleFactor) ? 1.0 : rescaleFactor;
+
 	float rescaleFactor2 = rescaleFactor*rescaleFactor;
 	for(DepthMapPixelHypothesis* source = currentDepthMap; source < currentDepthMap+width*height; source++)
 	{
